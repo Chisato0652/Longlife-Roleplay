@@ -1,0 +1,225 @@
+<!--
+Template website untuk server GTA SA-MP
+Cara pakai:
+1. Ganti nilai di bagian <script> pada variabel `SERVER_IP`, `SERVER_PORT`, `DISCORD_LINK`, `SERVER_NAME`.
+2. Jika mau cek status server nyata, integrasikan dengan API Server Query / endpoint backend.
+3. File ini single-file (HTML/CSS/JS). Simpan sebagai index.html dan upload ke hosting.
+
+Fitur:
+- Hero + tombol Join (copy IP)
+- Informasi server (IP, port, mode, pemain)
+- Fitur rules, staff, download client
+- Form kontak (simple, tanpa backend)
+-->
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>LONGLIFE ROLEPLAY — Landing</title>
+  <meta name="description" content="Server SA-MP - gabung sekarang!">
+  <style>
+    :root{--bg:#0b1020;--card:#0f1724;--accent:#1f8fff;--muted:#9aa6bf}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;background:linear-gradient(180deg,#02030a 0%, #071226 100%);color:#e6eef8}
+    .container{max-width:980px;margin:32px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:52px;height:52px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#8a2be2);display:flex;align-items:center;justify-content:center;font-weight:700}
+    nav a{color:var(--muted);text-decoration:none;margin-left:18px}
+
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:24px;margin-top:28px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:22px;border-radius:12px}
+    h1{margin:0 0 12px;font-size:28px}
+    p.lead{color:var(--muted);margin:0 0 18px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;cursor:pointer;border:none;background:var(--accent);color:#fff;text-decoration:none;font-weight:600}
+    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+
+    .server-status{display:flex;flex-direction:column;gap:10px}
+    .status-row{display:flex;justify-content:space-between;align-items:center}
+    .ip{font-family:monospace;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px}
+
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+    .small{font-size:13px;color:var(--muted)}
+
+    footer{margin-top:34px;text-align:center;color:var(--muted);font-size:13px}
+
+    @media(max-width:880px){.hero{grid-template-columns:1fr}.grid-3{grid-template-columns:repeat(1,1fr)}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <img src="https://i.imgur.com/sguugEZ.png" alt="Logo LONGLIFE ROLEPLAY"
+       style="width:30%; height:30%; object-fit:cover; border-radius:1px;">
+        <div>
+          <div style="font-weight:700">LONGLIFE ROLEPLAY</div>
+          <div style="font-size:12px;color:var(--muted)">Kota Hidup Rukun Dan Damai</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#features"></a>
+        <a href="#rules">Rules</a>
+        <a href="#staff">Staff</a>
+        <a href="#join">Gabung</a>
+      </nav>
+    </header>
+
+    <main class="hero">
+      <section class="card">
+        <h1 id="serverName">LONGLIFE ROLEPLAY</h1>
+        <p class="lead">Selamat datang! Server SA-MP kami menyediakan pengalaman bermain seru: event harian, economy yang stabil, dan staff yang ramah. Bergabung sekarang dan buktikan RP buatanmu!</p>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" id="joinBtn">Copy IP</button>
+          <a class="btn ghost" href="#rules">Lihat Rules</a>
+        </div>
+
+        <div class="grid-3" style="margin-top:18px">
+          <div class="card small">
+            <div style="font-weight:700">Mode</div>
+            <div class="small">Roleplay</div>
+          </div>
+          <div class="card small">
+            <div style="font-weight:700">Players</div>
+            <div class="small" id="playerCount">--</div>
+          </div>
+          <div class="card small">
+            <div style="font-weight:700">Uptime</div>
+            <div class="small" id="uptime">--</div>
+          </div>
+        </div>
+
+        <h3 style="margin-top:18px">Fitur Unggulan</h3>
+        <ul style="color:var(--muted);margin-top:8px">
+          <li>Anti-cheat & Detection</li>
+          <li>Event Harian & Hadiah</li>
+          <li>Ekonomi & Sistem Job</li>
+          <li>Support Mobile / SAMP terbaru</li>
+        </ul>
+
+      </section>
+
+      <aside class="card server-status" id="statusCard">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700">Discord Longlife</div>
+          <div class="" id=""></div>
+          <div class="" id=""></div>
+          <div class="" id=""></div>
+        </div>
+          <a class="btn ghost" id="discordBtn" href="https://discord.gg/edb3u2rz">Discord</a>
+        </div>
+
+        <div style="margin-top:12px;text-align:center;color:var(--muted);font-size:12px">Client: SA-MP r<em style="font-style:normal">0.3.7+</em></div>
+      </aside>
+    </main>
+
+    <section id="rules" class="card" style="margin-top:18px">
+      <h2>Rules Server</h2>
+      <ol style="color:var(--muted);margin-top:8px">
+        <li>Jangan Mixing</li>
+        <li>Tidak boleh fail rp</li>
+        <li>Tdak boleh melakukan meta gaming [MG]</li>
+        <li>Jangan melakukan Power Gaming [PG]</li>
+        <li>Tidak boleh melakukan Meta Suara</li>
+        <li>Tidak boleh melakukan VDM</li>
+        <li>Dilarang refus rp atau menolak rp dari orang lain</li>
+        <li>Wajib mempunyai rasa takut terhadap tembakan dan senjata</li>
+        <li>Dilarang keras RTM</li>
+        <li>Cheating Dan Menggunakan Program Ketiga</li>
+        <p>Selebihnya liat di discord bagian category rules</p>
+      </ol>
+    </section>
+
+    <section id="staff" class="card" style="margin-top:18px">
+      <h2>Team Longlife Roleplay</h2>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="min-width:160px" class="card small"><div style="font-weight:700">Chisatoboba</div><div class="small">Founder</div></div>
+        <div style="min-width:160px" class="card small"><div style="font-weight:700">Koko</div><div class="small">Founder</div></div>
+        <div style="min-width:160px" class="card small"><div style="font-weight:700">Ripanz</div><div class="small">Developer</div></div>
+        <div style="min-width:160px" class="card small"><div style="font-weight:700">Leonn</div><div class="small">Developer</div></div>
+        <div style="min-width:160px" class="card small"><div style="font-weight:700">Brian</div><div class="small">Trial Developer</div></div>
+        <div style="min-width:160px" class="card small"><div style="font-weight:700">Toupacx</div><div class="small">Trial Developer</div></div>
+        <div style="min-width:160px" class="card small"><div style="font-weight:700">RI.py</div><div class="small">Mapper</div></div>
+        <div style="min-width:160px" class="card small"><div style="font-weight:700">Arnann</div><div class="small">Developer Discord</div></div>
+        <div style="min-width:160px" class="card small"><div style="font-weight:700">C.e.c.e</div><div class="small">Developer Discord</div></div>
+      </div>
+    </section>
+
+    <section id="join" class="card" style="margin-top:18px">
+      <h2>Gabung Sekarang</h2>
+      <p class="small">Klik tombol untuk menyalin IP server — lalu buka SA-MP dan hubungkan.</p>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+        <input id="ipInput" class="ip" style="flex:1;border:none" readonly>
+        <button class="btn" id="copyBtn">Copy</button>
+      </div>
+
+      <div style="margin-top:12px" class="small">Download SA-MP client di situs resmi atau klik link berikut (contoh): <a class="ghost" href="https://www.mediafire.com/file/l68duzmdkxheqa0/BAHAN+GTA+SAMP.rar/file" style="padding:4px 8px;border-radius:6px">Download</a></div>
+    </section>
+
+    <footer>
+      &copy; <span id="year"></span> LONGLIFE ROLEPLAY • Created with Chisato for SA-MP
+    </footer>
+  </div>
+
+  <script>
+    // --- Ubah nilai di sini ---
+    const SERVER_NAME = 'LONGLIFE ROLEPLAY';
+    const SERVER_IP = '178.128.221.185';
+    const SERVER_PORT = '7777';
+    const DISCORD_LINK = 'https://discord.gg/edb3u2rz';
+    // --------------------------
+
+    document.getElementById('serverName').innerText = SERVER_NAME;
+    document.getElementById('year').innerText = new Date().getFullYear();
+    const ipInput = document.getElementById('ipInput');
+    const ipPortEl = document.getElementById('ipPort');
+    const joinBtn = document.getElementById('joinBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const discordBtn = document.getElementById('discordBtn');
+
+    ipInput.value = SERVER_IP + ':' + SERVER_PORT;
+    ipPortEl.innerText = SERVER_IP + ':' + SERVER_PORT;
+    discordBtn.href = DISCORD_LINK;
+
+    function copyToClipboard(text){
+      navigator.clipboard && navigator.clipboard.writeText(text).then(()=>{
+        alert('IP disalin: ' + text);
+      }).catch(()=>{
+        prompt('Salin IP ini manual:', text);
+      });
+    }
+
+    copyBtn.addEventListener('click', ()=> copyToClipboard(ipInput.value));
+    joinBtn.addEventListener('click', ()=> copyToClipboard(ipInput.value));
+
+    // Simulasi status server (placeholder)
+    function refreshStatus(){
+      document.getElementById('lastChecked').innerText = new Date().toLocaleString();
+      // Jika ingin, lakukan fetch ke backend yang melakukan server query SA-MP
+      // contoh response yang diharapkan: {online:true,players:32,maxplayers:500,ping:54,uptime:'72%'}
+
+      // contoh dummy values
+      const online = Math.random() > 0.15;
+      const players = online ? Math.floor(Math.random()*120) : 0;
+      document.getElementById('playerCount').innerText = players + ' / 100';
+      document.getElementById('uptime').innerText = (Math.floor(Math.random()*99)+1) + '%';
+      document.getElementById('ping').innerText = online ? (Math.floor(Math.random()*120)+20) + ' ms' : '--';
+      document.getElementById('statusDot').style.background = online ? '#33d17a' : '#666';
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', refreshStatus);
+    // auto refresh pertama
+    refreshStatus();
+
+    // Optional: jika ingin cek status nyata, buat endpoint backend yang memanggil SA-MP server query
+    // contoh pseudo-fetch:
+    // fetch('/api/status').then(r=>r.json()).then(data=>{ /* update DOM sesuai data */ })
+
+  </script>
+
+</body>
+</html>
